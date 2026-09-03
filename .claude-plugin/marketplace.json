@@ -1,0 +1,13 @@
+{
+  "name": "sufyanskills",
+  "owner": {
+    "name": "Sufyan Selamet"
+  },
+  "plugins": [
+    {
+      "name": "sufyanskills",
+      "source": "./sufyanskills",
+      "description": "Design and research skills for Claude Code: reference sweeps, landing page prototypes, screenshot capture, qualitative research coding and synthesis checks"
+    }
+  ]
+}

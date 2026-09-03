@@ -1,0 +1,194 @@
+{
+  "_description": "Pattern matching rules for auto-coding. These run before AI, catching obvious cases instantly.",
+
+  "garbled_audio": {
+    "_description": "Patterns that indicate transcription errors or unclear audio",
+    "patterns": [
+      {
+        "name": "repeated_words",
+        "regex": "(\\b\\w+\\b)(?:\\s+\\1){3,}",
+        "description": "Same word repeated 4+ times (e.g., 'the the the the')",
+        "flag": "[?audio]"
+      },
+      {
+        "name": "repeated_chars",
+        "regex": "(.)\\1{5,}",
+        "description": "Same character repeated 6+ times",
+        "flag": "[?audio]"
+      },
+      {
+        "name": "nonsense_short",
+        "regex": "^[A-Z]{2,4}\\s+[A-Z]{2,4}$",
+        "description": "Very short utterances of random capitals",
+        "flag": "[?audio]"
+      }
+    ]
+  },
+
+  "filler_utterances": {
+    "_description": "Low-value utterances that don't need coding",
+    "patterns": [
+      {
+        "name": "acknowledgments",
+        "regex": "^(Yeah|Okay|Got it|Understood|Right|Ah|Oh|Hmm|Mm)[.,]?\\s*(yeah|okay|got it)?[.,]?$",
+        "description": "Simple acknowledgments",
+        "flag": "filler",
+        "skip_coding": true
+      }
+    ]
+  },
+
+  "tool_mentions": {
+    "_description": "Detect specific tools mentioned in transcript",
+    "patterns": [
+      {
+        "name": "google_sheets",
+        "regex": "\\b[Gg]oogle\\s*[Ss]heets?\\b|\\bGSheets?\\b",
+        "suggests_code": "Tool: Google Sheets"
+      },
+      {
+        "name": "whatsapp",
+        "regex": "\\b[Ww]hats[Aa]pp\\b",
+        "suggests_code": "Fragmented data"
+      },
+      {
+        "name": "telegram",
+        "regex": "\\b[Tt]elegram\\b",
+        "suggests_code": "Fragmented data"
+      },
+      {
+        "name": "email",
+        "regex": "\\b[Ee]mail\\b|\\be-?mail\\b",
+        "suggests_code": "Fragmented data"
+      },
+      {
+        "name": "dashboard",
+        "regex": "\\bdashboard\\b",
+        "suggests_code": "Dashboard"
+      },
+      {
+        "name": "excel",
+        "regex": "\\b[Ee]xcel\\b|\\bspreadsheet\\b",
+        "suggests_code": "Tool: Excel"
+      },
+      {
+        "name": "sap",
+        "regex": "\\bSAP\\b",
+        "suggests_code": "Tool: SAP"
+      },
+      {
+        "name": "sql",
+        "regex": "\\bSQL\\b|\\bSSRS\\b",
+        "suggests_code": "Tool: SQL Server"
+      },
+      {
+        "name": "sharepoint",
+        "regex": "\\b[Ss]hare[Pp]oint\\b",
+        "suggests_code": "Tool: Sharepoint"
+      },
+      {
+        "name": "emr_ngmr",
+        "regex": "\\bNGMR\\b|\\bEMR\\b|\\belectronic medical record\\b",
+        "suggests_code": "Tool: EMR/NGMR"
+      },
+      {
+        "name": "ms_teams",
+        "regex": "\\bMS\\s*Teams\\b|\\bMicrosoft\\s*Teams\\b|\\bTeams\\b",
+        "suggests_code": "Tool: MS Teams"
+      },
+      {
+        "name": "hipps",
+        "regex": "\\bHIPPS\\b|\\biHEAD\\b|\\bN-HIPS\\b",
+        "suggests_code": "Tool: N-HIPS"
+      },
+      {
+        "name": "epic",
+        "regex": "\\bEpic\\b",
+        "suggests_code": "Tool: Epic"
+      }
+    ]
+  },
+
+  "keyword_hints": {
+    "_description": "Keywords that suggest certain codes (not definitive, AI confirms)",
+    "patterns": [
+      {
+        "keywords": ["manual", "manually", "by hand", "one by one"],
+        "suggests_code": "Manual data entry",
+        "confidence": 0.7
+      },
+      {
+        "keywords": ["clean", "cleaning", "clean up", "massage"],
+        "suggests_code": "Data transformation",
+        "confidence": 0.6
+      },
+      {
+        "keywords": ["centrali"],
+        "suggests_code": "Data centralization",
+        "confidence": 0.8,
+        "note": "Matches centralize, centralized, centralising, centralisation"
+      },
+      {
+        "keywords": ["download", "export", "extract"],
+        "suggests_code": "Data download",
+        "confidence": 0.6
+      },
+      {
+        "keywords": ["upload", "import", "push"],
+        "suggests_code": "Data upload",
+        "confidence": 0.6
+      },
+      {
+        "keywords": ["automat"],
+        "suggests_code": "Automation effort",
+        "confidence": 0.7
+      },
+      {
+        "keywords": ["frustrat", "annoying", "painful", "hate", "tedious"],
+        "suggests_code": "Pain point (unspecified)",
+        "confidence": 0.8,
+        "note": "Strong emotional language indicates friction"
+      },
+      {
+        "keywords": ["ideally", "wish", "would be nice", "if only"],
+        "suggests_code": "Desired state",
+        "confidence": 0.7
+      },
+      {
+        "keywords": ["predict", "forecast", "machine learning", "ML", "AI"],
+        "suggests_code": "AI for analysis",
+        "confidence": 0.6
+      },
+      {
+        "keywords": ["encrypt", "security", "sensitive", "confidential"],
+        "suggests_code": "Security concern",
+        "confidence": 0.7,
+        "note": "May be new code - check codebook"
+      },
+      {
+        "keywords": ["compli", "governance", "guideline", "policy"],
+        "suggests_code": "Governance",
+        "confidence": 0.6,
+        "note": "May be new code - check codebook"
+      }
+    ]
+  },
+
+  "quotable_signals": {
+    "_description": "Phrases that often indicate quotable moments",
+    "patterns": [
+      {
+        "keywords": ["everywhere", "all over", "scattered"],
+        "note": "Often describes fragmentation vividly"
+      },
+      {
+        "keywords": ["the key is", "the thing is", "the issue is", "the problem is"],
+        "note": "Speaker summarizing a core insight"
+      },
+      {
+        "keywords": ["I wish", "if only", "ideally"],
+        "note": "Expressing desired state"
+      }
+    ]
+  }
+}
